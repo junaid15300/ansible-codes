@@ -4,10 +4,6 @@
   become: true
   tasks:
 
-  - name: update repository index
-    yum:
-      update_cache: yes
-
   - name: install apache/httpd package
     yum:
       name: httpd

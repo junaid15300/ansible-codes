@@ -1,0 +1,19 @@
+---
+
+- hosts: webservers 
+  become: true
+  tasks:
+
+  - name: install httpd package 
+    yum:
+      name: httpd
+      state: latest
+
+- hosts: dbservers
+  become: true
+  tasks:
+      
+  - name: install tree package
+    yum:
+      name: tree
+      state: latest

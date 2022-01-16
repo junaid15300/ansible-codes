@@ -9,6 +9,15 @@
       name: httpd
       state: latest
 
+  - name: copy default html file for site
+    tags: httpd,centos
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
 - hosts: dbservers
   become: true
   tasks:

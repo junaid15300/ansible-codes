@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install httpd and tree 
+    yum:
+      name:
+        - "{{ httpd_package }}"
+        - "{{ tree_package }}"
+      state: latest
+      update_cache: yes

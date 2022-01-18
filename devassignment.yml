@@ -1,0 +1,47 @@
+---
+
+- hosts: dev_hosts
+  become: yes
+
+  tasks:
+  - name: applying updates to remote machine
+    yum:
+      name: '*'
+      state: latest
+
+  - name: download epel repository, git, wget and yum-utils
+    yum: 
+      name: 
+        - epel-release
+        - git
+        - yum-utils
+        - wget
+        - unzip
+      state: latest
+
+  -  name: download terraform from a remote repo
+     unarchive:
+       src: https://releases.hashicorp.com/terraform/0.9.1/terraform_0.9.1_linux_amd64.zip
+       dest: /usr/bin 
+       remote_src: true
+
+  - name: created user
+    ansible.builtin.user:
+      name: ansible
+      group: wheel
+
+  - name: Allow 'wheel' group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
+
+  - name: Add sudoers users to wheel group
+    user:
+      name=ansible
+      groups=wheel
+      append=yes
+      state=present
+      createhome=yes

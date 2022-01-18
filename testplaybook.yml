@@ -1,0 +1,29 @@
+---
+
+- hosts: webservers
+  become: yes
+ 
+  tasks:
+  - name: disable selinux
+    selinux:
+      state: disabled
+
+  - name: automate yum updates on nodes using cron
+    cron:
+      name: "yum updates"
+      minute: "0"
+      hour: "7"
+      job: "yum update"
+
+  - firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+
+  - name: copying file over to remote node
+    copy:
+      src: /root/code/jay.conf
+      dest: /etc/jay.conf
+      owneri: root
+      group: root
+      mode: '0755' 

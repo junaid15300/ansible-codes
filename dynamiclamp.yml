@@ -1,0 +1,16 @@
+---
+
+- hosts: webservers 
+  become: yes
+  roles: 
+    - apache
+
+- hosts: webservers
+  become: yes
+  roles:
+    - mysql
+
+- hosts: webservers
+  become: yes
+  roles:
+    - copy

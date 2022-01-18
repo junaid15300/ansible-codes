@@ -1,0 +1,68 @@
+---
+
+- hosts: webservers 
+  become: true
+  tasks:
+
+  - name: install httpd package 
+    yum:
+      name: httpd
+      state: latest
+
+  - name: start httpd service
+    tags: start,service
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+
+  - name: change line in the httpd conf file
+    tags: httpd, centos
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+
+  - name: restart httpd
+    tags: httpd,centos
+    service:
+      name: httpd
+      state: restarted
+
+  - name: copy default html file for site
+    tags: httpd,centos
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create simone user
+    tags: always
+    user:
+      name: simone
+      groups: root
+
+
+  - name: add sudoers file
+    tags: always
+    copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440 
+
+- hosts: dbservers
+  become: true
+  tasks:
+      
+  - name: install tree package
+    yum:
+      name: tree
+      state: latest

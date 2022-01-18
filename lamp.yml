@@ -1,0 +1,40 @@
+---
+
+- hosts: webservers 
+  become: yes
+
+  tasks:
+  -  name: Installing apache 
+     yum:
+       name: httpd
+       state: installed
+
+  - name: Starting and enabling the httpd service
+    service:
+      name: httpd
+      enabled: yes
+      state: started
+
+  - name: Install MySQL DB 
+    yum:
+      name: 
+        - mariadb-server
+        - mariadb
+      state: latest
+
+  - name: Installing php
+    yum:
+      name:
+        - php
+        - php-mysql
+      state: latest 
+    
+  - name: Copying php file in the /var/www/html
+    copy:
+      src: /etc/ansible/index.php
+      dest: /var/www/html/index.php
+
+  - name: restarting httpd service
+    service:
+      name: httpd
+      state: restarted 
